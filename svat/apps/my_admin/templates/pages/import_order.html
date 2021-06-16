@@ -1,0 +1,439 @@
+{% extends 'layout/base.html' %}
+
+{% load static %}
+{% block css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock css %}
+
+{% block content %}
+<style>
+  .dataTables_filter{
+    float: left !important;
+  }
+  .select2-container .select2-selection--single {
+    height: auto;
+  }
+
+  /* table general */
+  th:first-child {
+    width:1%;
+    white-space: nowrap;
+  }
+
+  td:last-child {
+    white-space: nowrap;
+    width: 1%;
+  }
+
+  td:last-child button:first-child {
+    margin-right: 10px;
+  }
+</style>
+
+<!-- Modal Import Order -->
+<div class="modal fade" id="createImportOrder" tabindex="-1" role="dialog" aria-labelledby="createImportOrderLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content" style="height:70vh;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createImportOrderLabel">Thêm mới</h5>
+        <br>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div style="padding-right: 2rem;padding-left: 1rem;">
+        <table  class="table table-bordered table-hover table-fixed">
+          <tr style="width:100%">
+            <th style="width:50%">Sản phẩm</th>
+            <th style="width:30%">Số lượng </th>
+            <th style="width:20%"></th>
+          </tr>
+        </table>
+      </div> 
+      <div style=" overflow-y: scroll;overflow-x: hidden;" class="modal-body">
+        <div class="alert alert-danger" id="alertCreateError" role="alert" style="display:none">
+          <span id="createErrorMsg"></span>
+        </div>
+
+        <table id="add_list_product" class="table table-bordered table-hover table-fixed" style="width:100%">
+            <tbody id="body_list_product">
+
+          </tbody>
+          <tfoot>
+        </tfoot>  
+        </table>
+
+      </div>
+      <button type="button" class="btn btn-primary" id="addProduct"><h3>+</h3></button>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+        <button type="button" class="btn btn-primary" id="confirmCreate">Tạo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal View ImportOrder Detail-->
+<div class="modal fade" id="viewImportOrder" tabindex="-1" role="dialog" aria-labelledby="viewImportOrderLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewImportOrderLabel">Chỉnh sửa thành viên</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger" id="alertEditError" role="alert" style="display:none">
+          <span id="editErrorMsg"></span>
+        </div>
+        <form>
+          {% csrf_token %}
+            <table id="list_product" class="table table-bordered table-hover table-fixed" style="width:100%">
+              <thead>
+                  <tr>
+                      <th>Mã sản phẩm</th>
+                      <th>Số lượng </th>
+                      <th>Mã phiếu</th>
+                      <th>Tên sản phẩm</th>
+                  </tr>
+
+                </thead>
+              </table>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary close_product_list" data-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Preview ImportUser -->
+<div class="modal fade" id="previewImportOrder" tabindex="-1" role="dialog" aria-labelledby="previewImportOrderLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content" style="width: 100%;height: 60vh;margin-left: 5vh;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewImportOrderLabel">Phiếu nhập kho</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div style="padding-right: 2rem;padding-left: 1rem;">
+        <table  class="table table-bordered table-hover table-fixed">
+          <thead>
+            <tr style="width:100%">
+                <th style="width:30%">Mã sản phẩm</th>
+                <th style="width:35%">Sản phẩm</th>
+                <th style="width:35%">Số lượng </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      <div class="modal-body" style="overflow-y: scroll;overflow-x: hidden;">
+        <div class="alert alert-danger" id="alertCreateError" role="alert" style="display:none">
+          <span id="createErrorMsg"></span>
+        </div>
+
+        <table id="previewProduct" class="table table-bordered table-hover table-fixed" style="width:100%">
+          <!-- <thead>
+              <tr style="width:100%">
+                  <th style="width:30%">Mã sản phẩm</th>
+                  <th style="width:35%">Sản phẩm</th>
+                  <th style="width:35%">Số lượng </th>
+              </tr>
+            </thead> -->
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancel_list_product" data-dismiss="modal">Hủy bỏ</button>
+        <button type="button" class="btn btn-primary" id="confirmImportOrder">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content container-fluid" style="padding: 1rem">
+    
+  <div class="row p-2">
+    <div class="col"><h3>Danh sách nhập kho</h3></div>
+    <div class="col"></div>
+  </div>
+  <div class="card card-primary card-outline">
+    <div class="card-body">
+      <button type="button" class="btn btn-primary btn-sm create-btn">Thêm mới</button>
+      <table id="users" class="table table-bordered table-hover table-fixed" style="width:100%">
+        <thead >
+            <tr>
+                <th>Mã phiếu</th>
+                <th>Ngày tạo</th>
+                <th>Nhân viên tạo</th>
+                <th>Thao tác</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    <div id="limit_row" class="{{len}}"></div>
+</div>
+
+
+{% endblock content %}
+{% block script %}
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+
+  $(document).ready(function() {
+    let editingRow = null
+    let deletingRow = null
+    var current_length=0
+    var limit_row= document.getElementById("limit_row").getAttribute("class");
+    limit_row=parseInt(limit_row)
+
+    $('#addProduct').on('click', function(e){
+      var tb=document.getElementById('body_list_product');
+      if(current_length<limit_row){
+        var x=tb.insertRow(tb.length);
+        var y = x.insertCell(0);
+        var z = x.insertCell(1);
+        var t=x.insertCell(2)
+        y.setAttribute("style", "width: 50%;");
+        z.setAttribute("style", "width: 30%;");
+        t.setAttribute("style", "width: 20%;");
+        y.innerHTML='<select class="js-select2 form-control select2-hidden-accessible" style="width:100%"></select>';
+        z.innerHTML='<input  type="number" class="quantity" style="width:100%" name="quantity">';
+        t.innerHTML='<button style="width:100%" type="button" class="btn btn-primary delProduct"  >Xóa</button>'
+        $.get("/admin/GetAllProduct", function(data){
+            $(".js-select2").select2({
+              data: data.results
+            })
+        }); 
+        current_length=current_length+1
+      }
+
+    })
+
+
+    function sendRequest(method, endpoint, data){
+      return new Promise((resolve, reject) => {
+        let langCode = window.location.pathname.split('/')[1]
+        let csrftoken = $("[name=csrfmiddlewaretoken]").val();
+
+        fetch(`\/${langCode}${endpoint}`,
+          {method: method, body: JSON.stringify(data), headers: {"X-CSRFTOKEN": csrftoken}}
+        )
+          .then(data => resolve(data.json()))
+          .catch(err => reject(err))
+      })
+    }
+
+    function addLeadingZero(strDate){
+      return ('0' + strDate.toString()).slice(-2)
+    }
+
+    function formatDate(date, includedTime=false){
+        let dateStr = `${addLeadingZero(date.getUTCDate())}/${addLeadingZero(date.getUTCMonth() + 1)}/${date.getUTCFullYear()}`
+        let timeStr = ''
+
+        if(includedTime === true){
+            timeStr = `${addLeadingZero((date.getUTCHours() + 7) % 24)}:${addLeadingZero(date.getUTCMinutes())}:${addLeadingZero(date.getUTCSeconds())}`
+        }
+        
+        return `${dateStr} ${timeStr}`
+    }
+
+    var tableUsers = $('#users').DataTable({
+        "ajax": "/admin/GetAllImportOrder",
+        "bLengthChange": false,
+        "columns": [
+            { "data": "id" },
+            {
+              "data": "created",
+              "render": function(data, type, row, meta){
+                if(data === null) return '';
+                let date = new Date(data);
+                return formatDate(date, true);
+              }
+            },
+            { "data": "user" },
+            {
+              "data": "actions",
+              "render": function ( data, type, row, meta ) {
+                  return '<button type="button" class="btn btn-primary view-detail">Xem chi tiết</button>'
+              }
+            }
+        ]
+    });
+
+    
+    // Event Controller
+
+    $('.create-btn').on('click', function(e){
+      current_length=0
+        var x=$("#body_list_product tr")
+        if(x!=null){
+          $("#body_list_product tr").remove();
+        }
+      $('#createImportOrder').modal('show')
+    })
+
+    $(document).on('click', '.view-detail', function(e){
+      viewRow = $(this).parents('tr')[0]
+      viewImportOrder = tableUsers.row(viewRow).data();
+      let viewDetail = {
+        id: viewImportOrder.id,
+      }
+      sendRequest('POST', '/admin/ViewDetail', viewDetail)
+          .then(data => {
+            if(!data.success){
+              toastr.error('Vui lòng thử lại', 'Lỗi')
+            }
+            else{
+              req_data=data.data
+               var product_list= document.getElementById("tbody_product_list")
+               if(product_list!=null){
+                document.getElementById("tbody_product_list").remove()
+               }
+              var tbody = document.createElement("TBODY");
+              tbody.setAttribute("id", "tbody_product_list");
+              for(var i=0; i<req_data.length; i++){
+                  var tr = document.createElement("TR");
+
+                  var th = document.createElement("TH");
+                  var t = document.createTextNode(req_data[i]['id']);
+                  th.appendChild(t);
+                  tr.appendChild(th);
+
+                  var th = document.createElement("TH");
+                  var t = document.createTextNode(req_data[i]['quantity']);
+                  th.appendChild(t);
+                  tr.appendChild(th);
+
+                  var th = document.createElement("TH");
+                  var t = document.createTextNode(req_data[i]['import_order']);
+                  th.appendChild(t);
+                  tr.appendChild(th);
+
+                  var th = document.createElement("TH");
+                  var t = document.createTextNode(req_data[i]['product']);
+                  th.appendChild(t);
+                  tr.appendChild(th);
+
+                  tbody.appendChild(tr)
+              }      
+              document.getElementById("list_product").appendChild(tbody); 
+              current_status=1;       
+              $('#viewImportOrder').modal('show')
+            }
+          })
+    })
+
+    $("#add_list_product").on('click', '.delProduct', function () {
+    $(this).closest('tr').remove();
+    current_length=current_length-1;
+    });
+    
+        var list_id=[];
+        var list_quantity=[];
+        var list_name=[];
+
+    $(document).on('click', '#confirmCreate', function(e){
+      var x=$("#body_list_product tr")
+        if(x.length!=0){
+          list_id=[]
+          list_quantity=[]
+          list_name=[]
+          var preview_list=document.getElementById("preview_product_list")
+          if(preview_list!=null){
+            document.getElementById("preview_product_list").remove()
+          }
+          var myTab = document.getElementById('body_list_product');
+          
+          $('#body_list_product  > tr > td > select > option:selected').each(function(index, select) { 
+          list_id.push(select.getAttribute("value"));
+          list_name.push(select.text)
+          });
+          var check_input=1
+          $('#body_list_product  > tr > td > input').each(function(index, select) { 
+            if(select.value==0){
+              check_input=0
+            }
+            list_quantity.push(select.value);
+          });
+          if(check_input==1){
+            var tbody = document.createElement("TBODY");
+            tbody.setAttribute("id", "preview_product_list");
+            for(var i=0; i<list_id.length; i++){
+              var tr = document.createElement("TR");
+
+              var th = document.createElement("TH");
+              th.setAttribute("style", "width:30%");
+              var t = document.createTextNode(list_id[i]);
+              th.appendChild(t);
+              tr.appendChild(th);
+
+              var th = document.createElement("TH");
+              th.setAttribute("style", "width:35%");
+              var t = document.createTextNode(list_name[i]);
+              th.appendChild(t);
+              tr.appendChild(th);
+
+              var th = document.createElement("TH");
+              th.setAttribute("style", "width:35%");
+              var t = document.createTextNode(list_quantity[i]);
+              th.appendChild(t);
+              tr.appendChild(th);
+
+              tbody.appendChild(tr)
+            }      
+            document.getElementById("previewProduct").appendChild(tbody);       
+            $('#previewImportOrder').modal('show')
+          }
+          else{
+            toastr.warning('Vui lòng nhập số lượng', 'Lỗi')
+          }
+        }
+        else{
+          toastr.warning('Vui lòng thêm sản phẩm', 'Lỗi')
+        }
+    })
+    
+    $(document).on('click', '#confirmImportOrder', function(e){
+      var list_product_post=[]
+      for(var i=0; i<list_id.length; i++){
+            obj_post={
+              id:list_id[i],
+              quantity:list_quantity[i]
+            }
+            list_product_post.push(obj_post)
+      }
+      importProduct={
+        data:list_product_post,
+      }
+      sendRequest('POST', '/admin/CreateImportOrder', importProduct)
+        .then(data => {
+              if(!data.success){
+                toastr.error('Hiện đang có lỗi vui lòng thử lại', 'Lỗi')
+              }
+              toastr.success('Tạo phiếu nhập kho thành công', 'Thành công')
+              tableUsers.ajax.reload()
+        })
+      document.getElementById("preview_product_list").remove()
+      $('#createImportOrder').modal('hide')
+      $('#previewImportOrder').modal('hide')
+    })
+
+    $(document).on('click', '#cancel_list_product', function(e){
+        var check_list=document.getElementById("preview_product_list")
+        if(check_list!=null){
+          check_list.remove()
+        }
+    })
+
+
+
+  })
+</script>
+
+{% endblock script %}

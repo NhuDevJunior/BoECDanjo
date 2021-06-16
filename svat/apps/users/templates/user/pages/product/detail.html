@@ -1,0 +1,537 @@
+{% extends 'user/layout/base.html' %}
+{% load static %}
+{% block title %}
+{{ product.name }}
+{% endblock title %}
+{% load i18n %}
+{% load humanize %}
+
+{% block css %}
+
+<style>
+
+.breadcrumb-section {
+    display: flex;
+    align-items: center;
+    padding: 45px 0 40px;
+}
+
+.set-bg {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top center;
+}
+
+.text-center {
+    text-align: center!important;
+}
+
+.breadcrumb__text h2 {
+    font-size: 46px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.breadcrumb__option a {
+    display: inline-block;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 700;
+    margin-right: 20px;
+    position: relative;
+}
+
+.breadcrumb__option span {
+    display: inline-block;
+    font-size: 16px;
+    color: #fff;
+}
+
+
+.product-details {
+    padding-top: 80px;
+}
+
+.spad {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+.product__details__pic__item img {
+    min-width: 100%;
+}
+
+img {
+    max-width: 100%;
+}
+
+.product__details__text .product__details__price {
+    font-size: 30px;
+    color: #d22;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.product__details__text p {
+    margin-bottom: 45px;
+}
+
+.product__details__quantity {
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.pro-qty {
+    width: 140px;
+    height: 50px;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    background: #f5f5f5;
+    margin-bottom: 5px;
+}
+
+.pro-qty .qtybtn {
+    width: 35px;
+    font-size: 16px;
+    color: #6f6f6f;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.pro-qty input {
+    height: 100%;
+    width: 100%;
+    font-size: 25px;
+    color: #6f6f6f;
+    width: 50px;
+    border: none;
+    background: #f5f5f5;
+    text-align: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.pro-qty .qtybtn {
+    width: 35px;
+    font-size: 25px;
+    color: #6f6f6f;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.primary-btn {
+    display: inline-block;
+    font-size: 14px;
+    padding: 10px 28px 10px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: #7fad39;
+    letter-spacing: 2px;
+}
+
+.product__details__text .primary-btn {
+    padding: 16px 28px 14px;
+    margin-right: 6px;
+    margin-bottom: 5px;
+}
+
+.product__details__text ul {
+    border-top: 1px solid #ebebeb;
+    padding-top: 40px;
+    margin-top: 50px;
+    padding-left: 0;
+}
+
+.product__details__text ul li {
+    font-size: 16px;
+    color: #1c1c1c;
+    list-style: none;
+    line-height: 36px;
+}
+
+.product__details__text ul li b {
+    font-weight: 900;
+    width: 170px;
+    display: inline-block;
+}
+
+.product__details__text ul li .share {
+    display: inline-block;
+}
+
+.product__details__text ul li .share a {
+    display: inline-block;
+    font-size: 15px;
+    color: #1c1c1c;
+    margin-right: 25px;
+}
+
+.product__details__text ul li span samp {
+    color: #d22;
+}
+
+
+/* tab Description */
+.product__details__tab {
+    padding-top: 85px;
+}
+
+.product__details__tab .nav-tabs {
+    border-bottom: none;
+    justify-content: center;
+    position: relative;
+}
+
+.product__details__tab .nav-tabs li {
+    margin-bottom: 0;
+    margin-right: 65px;
+}
+
+.product__details__tab .nav-tabs li a {
+    font-size: 16px;
+    color: #999;
+    font-weight: 700;
+    border: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    padding: 0;
+}
+.tab-content>.tab-pane {
+    display: none;
+}
+
+.product__details__tab .product__details__tab__desc {
+    padding-top: 44px;
+}
+
+.product__details__tab .product__details__tab__desc h6 {
+    font-weight: 900;
+    color: #333;
+    margin-bottom: 26px;
+}
+
+.product__details__tab .product__details__tab__desc p {
+    color: #666;
+}
+
+.tab-content>.active {
+    display: block;
+}
+
+.product__details__pic__item {
+    margin-bottom: 20px;
+}
+
+.product__details__pic__slider.owl-carousel .owl-item img {
+    width: auto;
+}
+
+.owl-loaded {
+  overflow: hidden;
+}
+
+.owl-stage {
+    position: relative;
+    -ms-touch-action: pan-Y;
+    touch-action: manipulation;
+    -moz-backface-visibility: hidden;
+    display: flex;
+    overflow: hidden;
+}
+.owl-prev {
+   display: none;
+}
+.disabled {
+   display: none !important;
+}
+
+#btn-cmt{
+  float: right;
+  border: none;
+  outline: none;
+  padding: 10px 20px;
+  background: #7fad39;
+  color: white;
+  font-weight: bold;
+}
+
+h4 a:hover {
+  color: #00dbdb;
+}
+
+.avatar {
+  width: 64px; 
+  height: 64px; 
+  border-radius: 50%;
+}
+</style>
+
+
+{% endblock %}
+
+{% block content %}
+
+<section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg" style="background-image: url(&quot;/static/user/homepage/img/bannerpro.jpg&quot;); background-position: center">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <div class="breadcrumb__text">
+          <h2>{{ product.name }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="product-details spad">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-md-6">
+        <div class="product__details__pic">
+          <div class="product__details__pic__item">
+            <img class="product__details__pic__item--large" id="bigImage" src="/static/user/homepage/img/product{{product.id}}.jpg" alt="" >
+          </div>
+          <div class="product__details__pic__slider">
+            {% for image in product.images %}
+              <img src="/static/user/homepage/img/product{{product.id}}.jpg">
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <div class="product__details__text">
+          {% csrf_token %}
+          <input type="hidden" id="product-id" name="product-id" value="{{product.id}}">
+          <h3>{{ product.name }}</h3>
+          <div class="product__details__price">{{ product.cost | floatformat:0 | intcomma }}đ</div>
+          <div class="product__details__quantity">
+            <div class="quantity">
+              <div class="pro-qty"><span class="dec qtybtn" id="decBtn">-</span>
+                <input type="number" id="quantity" value="1">
+                <span class="inc qtybtn" id="incBtn">+</span></div>
+            </div>
+          </div>
+          <button class="flat-btn primary-btn add-to-card-btn">{% trans "btn-add-to-cart" %}</button>
+          <ul>
+            <li><b>Availability</b> <span>In Stock</span></li>
+            <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="product__details__tab">
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#tabs-1" role="tab" aria-selected="false">{% trans "label-product-desc" %}</a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tabs-1" role="tabpanel">
+              <div class="product__details__tab__desc">
+                {{ product.des | safe}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="product__details__tab">
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <div class="section-title related__product__title">
+                <h2>Comment</h2>
+              </div>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tabs-1" role="tabpanel">
+              <div class="product__details__tab__cmt">
+                {% if request.user.is_authenticated %}
+                <div class="media comment">
+                  <img class="mr-3 avatar" src="/static/user/homepage/img/avatar.png" alt="Generic placeholder image">
+                  <div class="media-body">
+                    <textarea placeholder="Nhập comment của bạn vào đây..." style="resize:none; width: 100%; height: 8rem; padding: 10px; font-size: larger;" id="comment_content"></textarea>
+                    <button id="btn-cmt">Comment</button>
+                  </div>
+                </div>
+                {% else %}
+                <h4 style="text-align: center; color: grey;">Để có thể bình luận. Hãy <a href="/vi/login" style="text-decoration: underline;">Đăng nhập</a></h4>
+                {% endif %}
+              </div>
+            </div>
+            <div class="loaded-cmt">
+              <ul class="list-unstyled" id="comments">
+              {% if comments|length > 0 %}
+                {% for comment in comments %}
+                <li class="media">
+                  <img class="mr-3 avatar" src="/static/user/homepage/img/avatar.png" alt="Generic placeholder image">
+                  <div class="media-body">
+                    <h5 class="mt-0" style="font-weight: bold">{{comment.user__name}}</h5>
+                    <p>{{comment.content}}</p>
+                  </div>
+                </li>
+                {% endfor %}
+              {% else %}
+              <h4 id="be-first-cmt" style="text-align: center; color: grey;">Trở thành người đầu tiên comment sản phẩm này!</h4>
+              {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="related-product">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="section-title related__product__title">
+          <h2>{% trans "label-related-products" %}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      {% for product in related_products %}
+          <div class="col-lg-3 col-md-4 col-sm-6 mix">
+              {% include 'user/components/product.html' with product=product %}
+          </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+  var username = "{{request.user.name}}";
+
+  function addComment(){
+    let comment_content = $('#comment_content').val()
+    let wrapper = $('<li/>',{ class: 'media' })
+    let avatar = $('<img>', {class: "mr-3 avatar", src: "/static/user/homepage/img/avatar.png"})
+    let media_body = $('<div/>', {class: "media-body"})
+    let user_name = $('<h5/>', {class: "mt-0", text: username})
+    let content = $('<p>', {text: comment_content})
+
+    media_body.append(user_name) 
+    media_body.append(content)
+    wrapper.append(avatar)
+    wrapper.append(media_body)
+
+    $('#comments').append(wrapper)
+    $('#be-first-cmt').css('display', 'none')
+    $('#comment_content').val('')
+  }
+
+
+  $(document).ready(function(){
+    $(".product__details__pic__slider").owlCarousel({
+        loop: true,
+        margin: 20,
+        items: 4,
+        dots: false,
+        smartSpeed: 1200,
+        autoHeight: false,
+        navigation: false,
+        autoplay: true
+    });
+
+    $('#incBtn').on('click', function(){
+      let currentQuantity = parseInt($('#quantity').val())
+      $('#quantity').val(currentQuantity + 1)
+    })
+
+    $('#decBtn').on('click', function(){
+      let currentQuantity = parseInt($('#quantity').val())
+      if (currentQuantity > 1){
+        $('#quantity').val($('#quantity').val() - 1)
+      }
+    })
+
+    $('.owl-item img').on('click', function(){
+      let imgPath = $(this).attr('src')
+      $('#bigImage').attr('src', imgPath)
+    })
+
+    $('.add-to-card-btn').click(function(){
+      const data = {
+        'product_id': $('#product-id').val(),
+        'quantity': $('#quantity').val()
+      }
+
+      const url = `/${window.location.pathname.split('/')[1]}/add-product-to-cart`;
+      $.ajax({
+        url,
+        type: "POST",
+        headers: {
+          "X-CSRFTOKEN": $("[name=csrfmiddlewaretoken]").val()
+        },
+        dataType: 'json',
+        processData: false,
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        success: function(data) {
+          if (data.success) {
+            $('.total-cart-span').html(data.data.total)
+            toastr.success(data.message)
+          } else {
+            toastr.warning(data.message)
+          }
+        }
+      })
+    })
+
+    $('#btn-cmt').on('click', function(){
+        let content = $('#comment_content').val()
+        if ($.trim(content) === ""){
+            toastr.warning('Vui lòng nhập nội dung comment!')
+            return
+        }
+
+        let data = {
+            content: content
+        }
+
+        const url = window.location.href + '/comment'
+        $.ajax({
+          url,
+          type: "POST",
+          headers: {
+            "X-CSRFTOKEN": $("[name=csrfmiddlewaretoken]").val()
+          },
+          dataType: 'json',
+          processData: false,
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify(data),
+          success: function(data) {
+            if (data.success) {
+              $('.total-cart-span').html(data.data.total)
+              toastr.success('Comment thành công!')
+              addComment()
+            } else {
+              toastr.warning(data.message)
+            }
+          }
+        })
+
+    })
+
+  })
+</script>
+
+{% endblock %}

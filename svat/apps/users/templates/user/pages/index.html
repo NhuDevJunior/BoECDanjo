@@ -1,0 +1,160 @@
+{% extends 'user/layout/base.html' %} 
+{% load static %} 
+{% block title %}Trang chủ{% endblock title %}
+{% load i18n %} 
+{% block content %}
+
+{% block css %}
+
+<style>
+  .banner__pic {
+    height: 20rem;
+  }
+
+  .banner__pic img{
+      width: 100%;
+      object-fit: cover;
+      height: -webkit-fill-available;
+  }
+</style>
+
+{% endblock %}
+
+<body>
+     <section class="hero" style="margin-bottom: 30px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                </div>
+                <div class="col-lg-9">
+
+                    <div class="hero__item set-bg" data-setbg="/static/user/homepage/img/banner69.jpg" style="background-image: url(&quot;/static/user/homepage/img/bookbanner.jpg&quot;);">
+                        <div class="hero__text">
+                            <span style="color: #fff;">XIN CHÀO</span>
+                            <h2 style="color: white;">Sách <br>Là Nguồn Tri Thức</h2>
+                            <p style="color: white;">Mua ngay hôm nay để nhận ưu đãi</p>
+                            <a href="{% url 'user.product.list' %}" class="site-btn">Xem Hàng</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="categories">
+        <div class="container">
+            <div class="row">
+                <div class="categories__slider owl-carousel owl-loaded owl-drag">
+                    <div class="owl-stage-outer">
+
+                        <div class="owl-stage" style="transform:translate3d(-1170, 0px, 0px); transition: all 1.2s ease 0s; width: 3083px;">
+                            
+                            {% for product_category in product_categories %}
+                                <div class="owl-item active" style="width: 292.5px;">
+                                    <div class="col-lg-3">
+                                        <div class="categories__item set-bg" data-setbg="/static/user/homepage/img/img{{product_category.id}}.jpg" style="background-image: url(&quot;/static/user/homepage/img/img{{product_category.id}}.jpg&quot;);">
+                                            <h5><a href="product?category={{product_category.id}}">                                
+                                            {% if request.LANGUAGE_CODE == 'vi' %}
+                                                {{ product_category.name_vi }}
+                                            {% else %}
+                                                {{ product_category.name_en }}
+                                            {% endif %}</a></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="featured spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h2>{% trans "home-feature-product" %}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row featured__filter" id="MixItUp00DEA2">
+                {% for product in feature_products %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mix {{product.product_category.name_en}}">
+                    {% include 'user/components/product.html' with product=product %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+
+    <div class="banner">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="banner__pic">
+                        <img width="100%" src="/static/user/homepage/img/banner1.jpg" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="banner__pic">
+                        <img width="100%" src="/static/user/homepage/img/banner2.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <section class="latest-product spad">
+        <div class="container">
+            <div class="row ">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h2>{% trans "home-latest-product" %}</h2>
+                    </div>
+                </div>
+                {% for product in lastest_products %}
+                <div class="col-lg-3 col-md-4 col-sm-6  ">
+                    {% include 'user/components/product.html' with product=product %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <section class="from-blog spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title from-blog__title">
+                        <h2>{% trans "home-blog" %}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+              {% for article in newest_articles %}
+                  <div class="col-lg-3 col-md-4 col-sm-6 mix">
+                      {% include 'user/components/article.html' with article=article %}
+                  </div>
+              {% endfor %}
+            </div>
+        </div>
+    </section>
+
+
+    <script src="{% static 'user/homepage/js/jquery-ui.min.js'%}"></script>
+    <script src="{% static 'user/homepage/js/jquery.slicknav.js'%}"></script>
+    <script src="{% static 'user/homepage/js/mixitup.min.js'%}"></script>
+    <script src="{% static 'user/homepage/js/owl.carousel.min.js'%}"></script>
+    <script src="{% static 'user/homepage/js/main.js'%}"></script>
+    <script>
+	    $(document).ready(function (){
+ 		   $(".all-category").css("display","block");
+	    })
+    </script>
+</body>
+{% endblock content %}

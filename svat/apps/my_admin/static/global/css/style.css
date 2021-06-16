@@ -1,0 +1,13 @@
+svg.nav-icon {
+  width: 20px !important;
+}
+
+.dataTables_filter {
+  float: left !important;
+}
+
+.create-btn {
+  position: absolute;
+  right: 1.25rem;
+  z-index: 10;
+}

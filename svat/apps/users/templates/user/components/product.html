@@ -1,0 +1,21 @@
+{% load humanize %}
+<div class="featured__item">
+    <div class="featured__item__pic set-bg" data-setbg="/static/user/homepage/img/product{{product.id}}.jpg" style="background-image: url(&quot;/static/user/homepage/img/product{{product.id}}.jpg&quot;);">
+        <ul class="featured__item__pic__hover p-0 m-0">
+            <li><a href="{% url 'user.detail_product' id=product.id %}"><i class="fa fa-retweet"></i></a></li>
+            <li><a role="button" class="add-to-card-component-btn" data-id="{{product.id}}"><i class="fa fa-shopping-cart"></i></a></li>
+        </ul>
+    </div>
+    <div class="featured__item__text text-left">
+        {% csrf_token %}
+        <h6><a href="{% url 'user.detail_product' id=product.id %}" class="show-2line">
+        {% if request.LANGUAGE_CODE == "vi" %}
+            {{ product.product_language_vi.name }}
+        {% else %}
+            {{ product.product_language_en.name }}
+        {% endif %}
+        </a></h6>
+        
+        <h5>{{product.cost | floatformat:0 | intcomma}}đ</h5>
+    </div>
+</div>

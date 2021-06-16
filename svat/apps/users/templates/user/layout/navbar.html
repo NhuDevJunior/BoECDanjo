@@ -1,0 +1,161 @@
+{% load i18n %}
+{% block css %}
+
+<style>
+
+  .header__menu {
+    padding: 24px 0;
+  }
+
+  .header__logo {
+    padding: 15px 0;
+  }
+
+  .header__menu ul li {
+    list-style: none;
+    display: inline-block;
+    margin-right: 50px;
+    position: relative;
+  }
+
+  .header__menu ul li .header__menu__dropdown {
+    position: absolute;
+    left: 0;
+    top: 50px;
+    background: #222;
+    width: 180px;
+    z-index: 9;
+    padding: 5px 0;
+    -webkit-transition: all , .3s;
+    -moz-transition: all , .3s;
+    -ms-transition: all , .3s;
+    -o-transition: all , .3s;
+    transition: all , .3s;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .header__menu ul li a {
+    font-size: 14px;
+    color: #252525;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 2px;
+    -webkit-transition: all , .3s;
+    -moz-transition: all , .3s;
+    -ms-transition: all , .3s;
+    -o-transition: all , .3s;
+    transition: all , .3s;
+    padding: 5px 0;
+    display: block;
+  }
+
+  .header__cart {
+    text-align: right;
+    padding: 24px 0;
+  }
+
+  .header__cart ul {
+    display: inline-block;
+    margin-right: 25px;
+  }
+
+  .header__cart ul li {
+    list-style: none;
+    display: inline-block;
+    margin-right: 15px;
+  }
+
+  .header__cart ul li a {
+    position: relative;
+  }
+
+  .header__cart ul li a i {
+    font-size: 18px;
+    color: #1c1c1c;
+  }
+
+  .header__cart ul li a span {
+    height: 13px;
+    width: 13px;
+    background: #fdcf3c;
+    font-size: 10px;
+    color: #fff;
+    line-height: 13px;
+    text-align: center;
+    font-weight: 700;
+    display: inline-block;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: -12px;
+  }
+
+  .header__cart .header__cart__price {
+    font-size: 14px;
+    color: #6f6f6f;
+    display: inline-block;
+  }
+
+  .header__cart .header__cart__price span {
+    color: #252525;
+    font-weight: 700;
+  }
+
+</style>
+
+{% endblock css %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="header__logo">
+        <a href="{% url 'user.index' %}">
+          <img src="/static/user/homepage/img/book03.jpg" alt="">
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <nav class="header__menu">
+        <ul class="pl-0">
+          <li id="menu_item__home">
+            <a href="{% url 'user.index' %}">{% trans "header-home" %}</a>
+          </li>
+          <li id="menu_item__product">
+            <a href="{% url 'user.product.list' %}">{% trans "header-product" %}</a>
+          </li>
+          <li id="menu_item__articles">
+            <a href="{% url 'user.article.list' %}">{% trans "header-article" %}</a>
+          </li>
+          <li id="menu_item__contact">
+            <a href="{% url 'user.contact' %}">{% trans "header-contact" %}</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="col-lg-2">
+      <div class="header__cart">
+        <ul>
+          <li>
+            <a href="{% url 'user.shopping_cart' %}">
+              <i class="fa fa-shopping-bag"></i>
+              <span class="total-cart-span">0</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block script %}
+
+<script>
+  let itemNameFromUrl = window.location.pathname.split('/')[2]
+  let menuItem = document.getElementById(`menu_item__${itemNameFromUrl}`)
+  if (!menuItem) menuItem = document.getElementById(`menu_item__home`)
+  menuItem.classList += 'active'
+
+</script>
+
+{% endblock %}
