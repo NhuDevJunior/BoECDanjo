@@ -68,12 +68,12 @@ def handle_logout(request):
         logout(request)
         return render(request, 'pages/login.html')
 
-
+#xu li loi
 def handle403(request):
     return render(request, 'pages/403.html')
 
 
-
+#tim kiem
 def paginate(params, Model, values, initial_query=Q(), search_fields=[], order_fields=[]):
     instances = Model.objects.filter(initial_query).values(*values).order_by(*order_fields)
 
@@ -115,7 +115,7 @@ def paginate(params, Model, values, initial_query=Q(), search_fields=[], order_f
 def user(request):
     return render(request, 'pages/user.html')
 
-
+# admin lay tat ca nguoi dung
 @user_passes_test(PERMISSIONS.admin_quanly, login_url='admin.403')
 def get_all_user(request):
     if request.method == 'GET':
@@ -123,7 +123,7 @@ def get_all_user(request):
         data = paginate(request.GET, User, values, search_fields=['email', 'name'])
         return JsonResponse(data, safe=False)
 
-
+#check email ton tai
 def is_valid_newuser(user):
     exist_email = User.objects.filter(email=user.email).exists()
     if exist_email:
@@ -134,7 +134,7 @@ def is_valid_newuser(user):
         return False, "Email không thể bỏ trống"
     return True, None
 
-
+#tao user
 @user_passes_test(PERMISSIONS.admin_quanly, login_url='admin.403')
 def create_user(request):
     if request.method == 'POST':
@@ -161,7 +161,7 @@ def create_user(request):
 
         return HttpResponse(json.dumps(data), content_type='text/json')
 
-
+# cap nhat user
 @user_passes_test(PERMISSIONS.admin_quanly, login_url='admin.403')
 def update_user(request):
     if request.method == "POST":
@@ -189,7 +189,7 @@ def update_user(request):
             }
             return HttpResponse(json.dumps(data), content_type='text/json')
 
-
+#xoa user
 @user_passes_test(PERMISSIONS.admin_quanly, login_url='admin.403')
 def delete_user(request):
     if request.method == "POST":
@@ -239,7 +239,7 @@ def is_valid_newproductcategory(product_category):
         return False, "Danh mục không được để trống"
     return True, None
 
-
+#tao danh muc
 @user_passes_test(PERMISSIONS.admin_quanly, login_url='admin.403')
 def create_product_category(request):
     if request.method == 'POST':
@@ -258,7 +258,7 @@ def create_product_category(request):
         }
         return HttpResponse(json.dumps(data), content_type='text/json')
 
-
+#cap nhat danh muc
 @user_passes_test(PERMISSIONS.admin_quanly, login_url='admin.403')
 def update_product_category(request):
     if request.method == "POST":
@@ -281,7 +281,7 @@ def update_product_category(request):
             }
             return HttpResponse(json.dumps(data), content_type='text/json')
 
-
+#xoa danh muc
 @user_passes_test(PERMISSIONS.admin_quanly, login_url='admin.403')
 def delete_product_category(request):
     if request.method == "POST":
@@ -307,7 +307,7 @@ def delete_product_category(request):
 def article_category(request):
     return render(request,"pages/article_category.html")
 
-
+#lay tat ca cac danh muc ra
 @user_passes_test(PERMISSIONS.admin_quanly, login_url='admin.403')
 def get_all_article_category(request):
     if request.method == 'GET':
@@ -317,7 +317,7 @@ def get_all_article_category(request):
         }
         return JsonResponse(data, safe=False)
 
-
+#check ton tai cua danh muc so bi trung
 def is_valid_newarticlecategory(article_category):
     exist_name_en = ArticleCategory.objects.filter(name_en=article_category.name_en).exists()
     exist_name_vi = ArticleCategory.objects.filter(name_vi=article_category.name_vi).exists()
@@ -330,7 +330,7 @@ def is_valid_newarticlecategory(article_category):
     if not article_category.name_vi:
         return False, "Danh mục không được để trống"
     return True, None
-
+#tao moi danh muc
 
 @user_passes_test(PERMISSIONS.admin_quanly, login_url='admin.403')
 def create_article_category(request):
